@@ -26,18 +26,25 @@ class MainActivity : AppCompatActivity() {
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        // Assign initial value to views
-        binding.totalCar.text = tracker.count.toString()
-        binding.carPerMinute.text = tracker.countPerMin.toString()
-        binding.minElapsed.text = tracker.minElapsed.toString()
+        /** We attach an observer to the count LiveData property. We pass
+         * this to indicate that the activity is the observer. Whenever
+         * count's value changes, it will call the lambda function. As a
+         * result, the text in all three views (total cars, cars per minute,
+         * and minutes elapsed) will be updated according to the tracker
+         * object.
+         */
+        tracker.count.observe(this) { newCount ->
+            binding.totalCar.text = newCount.toString()
+        }
+        /** TODO: Create observers for countPerMin and minElapsed to update
+         * the corresponding text views.
+         */
 
-        // Increment car count when Add Car is clicked
         binding.addCar.setOnClickListener {
+            /** Calling increment will update the value of count and therefore
+             * triggers the lambda function we declared above.
+             */
             tracker.increment()
-            // Update view values using data from the CarTracker object
-            binding.totalCar.text = tracker.count.toString()
-            binding.carPerMinute.text = tracker.countPerMin.toString()
-            binding.minElapsed.text = tracker.minElapsed.toString()
         }
     }
 }
