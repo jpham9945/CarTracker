@@ -2,10 +2,11 @@ package edu.fullerton.ecs.mdap.cartracker
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.lifecycle.ViewModel
 import java.time.LocalTime
 
 /** Class that keeps track of cars that pass through a crosswalk. **/
-class CarTracker() {
+class CarTracker(): ViewModel() {
 
     /** Tracks the time that a car first passed through a crosswalk and the
      * most recent time it passed through a crosswalk.
