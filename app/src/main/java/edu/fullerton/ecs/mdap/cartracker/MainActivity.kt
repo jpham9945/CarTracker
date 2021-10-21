@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.annotation.RequiresApi
 import edu.fullerton.ecs.mdap.cartracker.databinding.ActivityMainBinding
 import androidx.activity.viewModels
+import androidx.databinding.DataBindingUtil
 
 /** Class for creating the main view **/
 class MainActivity : AppCompatActivity() {
@@ -22,29 +23,24 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.O) // Required annotation to use LocalTime
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Create view binding to the layout
-        val binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        /** Create data binding to the layout. The first parameter is the activity class
+         * bound to the layout. The second parameter is the ID of the layout file.
+         */
+        val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
-        /** We attach an observer to the count LiveData property. We pass
-         * this to indicate that the activity is the observer. Whenever
-         * count's value changes, it will call the lambda function. As a
-         * result, the text in all three views (total cars, cars per minute,
-         * and minutes elapsed) will be updated according to the tracker
-         * object.
+        /** We assign our tracker object to the tracker variable inside the layout.
+         * We also assign this class as the lifecyle owner so the system knows when to store
+         * and retrieve the data in cases when the application crashes or rotates.
          */
-        tracker.count.observe(this) { newCount ->
-            binding.totalCar.text = newCount.toString()
-        }
-        /** TODO: Create observers for countPerMin and minElapsed to update
-         * the corresponding text views.
-         */
+        binding.tracker = tracker
+        binding.lifecycleOwner = this
 
         binding.addCar.setOnClickListener {
-            /** Calling increment will update the value of count and therefore
-             * triggers the lambda function we declared above.
+            /** Calling increment will update the value of count and other variables
+             * in the tracker object thus updating the interface.
              */
             tracker.increment()
         }
     }
+
 }

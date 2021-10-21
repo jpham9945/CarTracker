@@ -28,8 +28,8 @@ class CarTracker(): ViewModel() {
     private val _count = MutableLiveData(0)
 
     // TODO: Convert _minElapsed and _countPerMin into MutableLiveData objects
-    private var _minElapsed: Int // Minutes passed since the first entry.
-    private var _countPerMin: Double // Number of cars that pass per minute.
+    private var _minElapsed= MutableLiveData(0) // Minutes passed since the first entry.
+    private var _countPerMin= MutableLiveData(0.0)// Number of cars that pass per minute.
 
     /** The count property is backed by _count. This property can only return a
      * value because it has a getter (get()), but no setter (set()). Specifically,
@@ -46,13 +46,13 @@ class CarTracker(): ViewModel() {
         }
 
     // TODO: Change minElapsed to use LiveData
-    var minElapsed: Int
+    val minElapsed: LiveData<Int>
         get() {
             return _minElapsed
         }
 
     // TODO: Change countPerMin to use LiveData
-    var countPerMin: Double
+    val countPerMin: LiveData<Double>
         get() {
             return _countPerMin
         }
@@ -63,13 +63,8 @@ class CarTracker(): ViewModel() {
 
         // Initialize properties and their backing properties
         _count.value = 0
-        _minElapsed = 0
-        _countPerMin = 0.0
-
-        // No need to initialize count because it returns _count
-        // TODO: remove unneessary initialization
-        minElapsed = 0
-        countPerMin = 0.0
+        _minElapsed.value = 0
+        _countPerMin.value = 0.0
     }
 
     /** Function that increments the total car count. It also updates the values of
@@ -87,7 +82,7 @@ class CarTracker(): ViewModel() {
         /** Increase car count by one. LiveData provides a value property
          * that holds the actual data. However, it is nullable because it
          * may not have an initial value. We know that value in fact has
-         * a value because we initialized it. We us the !! (double bang)
+         * a value because we initialized it. We use the !! (double bang)
          * notation to explicitly tell the compiler that we are absolutely
          * sure _count's value has been initialized.
          *
@@ -101,8 +96,8 @@ class CarTracker(): ViewModel() {
         /** TODO: Update the assignment statement to provide values from a
          * MutableLiveData object.
          */
-        _minElapsed = minElapsed()
-        _countPerMin = countPerMin()
+        _minElapsed.value = minElapsed()
+        _countPerMin.value = countPerMin()
     }
 
     // Number of minutes passed since the first logged car.
@@ -127,7 +122,7 @@ class CarTracker(): ViewModel() {
         } else {
             // Return the number of cars per minute elapsed
             // TODO: Update minElapsed to retrieve the value of a LiveData object
-            return count.value!!.toDouble() / minElapsed
+            return count.value!!.toDouble() / minElapsed.value!!.toDouble()
         }
     }
 }
